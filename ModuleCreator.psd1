@@ -17,7 +17,7 @@ Description = 'A module to simplify the creation of templated modules'
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
     PSData = @{
-         Tags = @(' template','powershell','automate','module')
+         Tags = @('template','powershell','automate','module')
          LicenseUri = 'http://LICENSE_URI'
          ProjectUri = 'http://PROJECT_URI'
          IconUri = ''
