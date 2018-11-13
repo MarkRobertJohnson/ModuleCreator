@@ -1,4 +1,4 @@
-﻿$myModule = Import-Module (Get-ChildItem "$PSScriptRoot\..\*.psm1" | Select-Object -ExpandProperty FullName -first 1) -force -PassThru
+﻿$myModule = Import-Module (Get-ChildItem "$PSScriptRoot\..\Source\*.psm1" | Select-Object -ExpandProperty FullName -first 1) -force -PassThru
 
 Describe 'Set-ModuleVariable' {
     Context 'Running without arguments'   {

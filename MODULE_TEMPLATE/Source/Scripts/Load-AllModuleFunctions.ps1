@@ -11,7 +11,7 @@
 $moduleName = [io.path]::GetFileNameWithoutExtension((gci $moduleRoot | where { $_.name -like '*.psm1' -or $_.name -like '*.psd1' } | select -First 1).FullName)
 $functionNamesToExport = @()
 #All *.ps1 files in these folders will be included in the module
-$functionPaths = @("$ModuleRoot\functions\*.ps1")
+$functionPaths = @("$ModuleRoot\Public\*.ps1", "$ModuleRoot\Private\*\*.ps1")
 $excludeFunctionPaths = @('*.Tests.ps1','*.Test.ps1')
 
 foreach($functionPath in $functionPaths) {

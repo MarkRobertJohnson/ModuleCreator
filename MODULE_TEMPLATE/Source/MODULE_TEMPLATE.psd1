@@ -11,7 +11,7 @@ ModuleVersion = '1.0.0'
 GUID = '[[$ModuleGuid]]'
 Author = '[[$Author]]'
 CompanyName = '[[$CompanyName]]'
-Copyright = '[[$Copyright]]'
+Copyright = '© [[$Copyright]]'
 Description = '[[$Description]]'
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

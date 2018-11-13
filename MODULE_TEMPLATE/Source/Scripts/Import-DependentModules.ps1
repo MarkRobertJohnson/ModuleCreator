@@ -12,7 +12,7 @@ if($module -and $module.PrivateData -and $module.PrivateData.PSData -and $module
         if(-not $depModule) {
             Write-Host "Module dependency '$($_)' was not installed, will attempt to install from default PS Repository ..."
             try {
-                #& "$ModuleRoot\Scripts\Set-DefaultPSGalleryUrl.ps1" -RemoveAllOtherRepositories -RepoUrl 'http://packages.development.eidpassport.com/nuget/powershell'
+                #& "$ModuleRoot\Scripts\Set-DefaultPSGalleryUrl.ps1" -RemoveAllOtherRepositories -RepoUrl ''
                 Install-Module -Name $_ -Force 
                 $depModule = Get-LatestInstalledModule $_           
             } catch {

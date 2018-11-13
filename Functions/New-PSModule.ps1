@@ -1,5 +1,5 @@
 function New-PSModule {
-param(
+  param(
     [Parameter(Mandatory)]
     [string]$ModuleName,
     [parameter(Mandatory, HelpMessage='Enter the tags comma separated (i.e. tag1,tag2,tag3')]
@@ -11,12 +11,28 @@ param(
     [Version]$TemplatizerVersion = '1.0.20',
     [String]$ConfigPath,
     [String]$Source = ([io.path]::Combine($PSScriptRoot,'..','MODULE_TEMPLATE')),
-    [String]$Destination = (Join-Path (Get-Location) $ModuleName)
-)
-<#
+    [String]$Destination = (Join-Path (Get-Location) $ModuleName),
+    [parameter(Mandatory, HelpMessage='Company Name')]
+    [String]$CompanyName,
+    [parameter(Mandatory, HelpMessage='Author')]
+    [String]$Author,
+    [parameter(Mandatory, HelpMessage='Source Control user name')]
+    [string]$ScmUsername,
+    [string]$ScmBranch = 'master',
+    [string]$ProjectUri = "https://www.github.com/$ScmUsername/$ModuleName",
+    [string]$IconUri = "https://www.github.com/$ScmUsername/$ModuleName/$ScmBranch/gallery-icon-100x100.png",
+    [string]$LicenseUri = "https://www.github.com/$ScmUsername/$ModuleName/$ScmBranch/LICENSE",
+    [ValidateSet('GitHub')]
+    [string]$ScmType = 'GitHub',
+    [parameter(Mandatory, HelpMessage='NugetApiKey for publishing to PowerShell gallery')]
+    [string]$NugetApiKey,
+    [switch]$CreateRepository
+
+  )
+  <#
         .SYNOPSIS
         Creates a new module from a template module 'MODULE_TEMPLATE'
-#>
+  #>
 
     $null = Get-PSRepository -ErrorAction SilentlyContinue
 
@@ -31,14 +47,14 @@ param(
         RegExDynamicReplacements = @{
             "MODULE_TEMPLATE" = '$TemplateModuleName';
         };
-        Author = "Axian, Inc.";
-        CompanyName = "Axian, Inc.";
-        Copyright = '© [[[DateTime]::Now.Year]] [[$CompanyName]]';
-        IconUri = '';
-        LicenseUri = "http://LICENSE_URI";
+        Author = "$Author";
+        CompanyName = "$CompanyName";
+        Copyright = '[[[DateTime]::Now.Year]] [[$CompanyName]]';
+        IconUri = $IconUri;
+        LicenseUri = $LicenseUri;
         ModuleGuid = '[[[guid]::NewGuid().ToString()]]';
         TemplateModuleName = $ModuleName;
-        ProjectUri = 'http://PROJECT_URI';
+        ProjectUri = $ProjectUri;
         Tags = ($Tags -split ',' | % { "'" + $_.Trim(@("'",'"')) + "'"}) -join ',';
         Description = $Description
     }
@@ -74,6 +90,24 @@ param(
                                  -Transform {
                                                 param([Parameter(ValueFromPipeline=$true)][string]$Text, [string]$Path, [string]$Destination, [ref]$TotalExpansions)                                                                          
                                                 Replace-RegExDynamicContent -Replacements $params.RegExDynamicReplacements @PSBoundParameters
-                             
                                             }
+    if($ScmType -eq 'GitHub' -and $CreateRepository) {
+        Install-Module GitHelperUtil
+        Import-Module GitHelperUtil
+        Install-GitCommandLine
+
+        New-GitHubRepository -Name $ModuleName -Username $ScmUsername
+        
+        Invoke-GitCommand 'init .' -RepoDir $Destination
+        Invoke-GitCommand 'add .' -RepoDir $Destination
+        Invoke-GitCommand "commit -m `"Initial Commit of $ModuleName`"" -RepoDir $Destination
+        Invoke-GitCommand "remote add origin $ProjectUri" -RepoDir $Destination
+        Invoke-GitCommand 'remote -v' -RepoDir $Destination
+        Invoke-GitCommand "push origin $ScmBranch" -RepoDir $Destination
+    }
+
+   # Publish-Module -Path $Destination -Force -NuGetApiKey $NugetApiKey
+
+    #Now setup Azure DevOps
+
 }
