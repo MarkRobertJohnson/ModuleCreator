@@ -19,8 +19,8 @@ PrivateData = @{
     PSData = @{
          Tags = @('template','powershell','automate','module')
          LicenseUri = 'http://LICENSE_URI'
-         ProjectUri = 'http://PROJECT_URI'
-         IconUri = ''
+         ProjectUri = 'https://github.com/MarkRobertJohnson/ModuleCreator'
+         IconUri = 'https://raw.githubusercontent.com/MarkRobertJohnson/ModuleCreator/master/gallery-icon-100x100.png'
          ReleaseNotes = 'Module Created'
          ExternalModuleDependencies = @('PSTemplatizer')
     } # End of PSData hashtable
