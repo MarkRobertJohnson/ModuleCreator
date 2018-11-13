@@ -1,0 +1,1 @@
+All helper, utility and sample scripts for the [[$TemplateModuleName]] module
