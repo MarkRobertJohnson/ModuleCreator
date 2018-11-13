@@ -7,7 +7,7 @@
 # Script module or binary module file associated with this manifest.
 RootModule = 'ModuleCreator.psm1'
 
-ModuleVersion = '1.0.1'
+ModuleVersion = '1.0.2'
 GUID = '3c653537-2db3-4a56-9904-ed958d25d02d'
 Author = 'Axian, Inc.'
 CompanyName = 'Axian, Inc.'
@@ -46,7 +46,9 @@ CLRVersion = '4.0'
 ProcessorArchitecture = 'None'
 
 # Modules that must be imported into the global environment prior to importing this module
-RequiredModules = @()
+RequiredModules = @(
+	@{ModuleName = 'PSTemplatizer'; RequiredVersion = '1.0.20'; }
+)
 
 # Assemblies that must be loaded prior to importing this module
 RequiredAssemblies = @()
