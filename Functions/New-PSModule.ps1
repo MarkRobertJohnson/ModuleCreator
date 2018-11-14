@@ -71,7 +71,8 @@ function New-PSModule {
         }
     }
     
-
+    
+  Convert-HashTableToObject $params | ConvertTo-Json | Out-File -Encoding utf8 $ConfigPath
     Import-TemplateConfiguration -Path $configPath -Verbose
 
     if(Test-Path $Destination) {
