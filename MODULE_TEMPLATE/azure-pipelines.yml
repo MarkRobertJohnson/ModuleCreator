@@ -2,20 +2,19 @@
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
-name: $(Build.DefinitionName)_$(GitVersion_InformationalVersion)
+name: $(Build.DefinitionName)_$(GitVersion.InformationalVersion)
 pool:
   vmImage: 'VS2017-Win2016' #  options: 'Ubuntu 16.04', 'macOS 10.13', 'VS2017-Win2016'
 
 steps:
-- task: gittools.gitversion.gitversion-task.GitVersion@3
+- task: gittools.gitversion.gitversion-task.GitVersion@4
   displayName: GitVersion
-
-# As long as we're calling build.ps1, we don't need to bootstrap separately
-- powershell: .\bootstrap.ps1
-  displayName: 'Restore pre-requisites'
-
-- powershell: .\build.ps1 -OutputDirectory $(Build.ArtifactStagingDirectory)\$(Build.DefinitionName) -SemVer $(GitVersion.InformationalVersion) -Verbose
-  displayName: 'Run build script'
+  
+- powershell: Install-Module ModuleBuilder -Force
+  displayName: Install ModuleBuilder module
+  
+- powershell: Import-Module ModuleBuilder -force; Build-Module ./Source/ -SemVer $(GitVersion.InformationalVersion) -Verbose
+  displayName: 'Build module using ModuleBuilder'
 
 - task: richardfennellBM.BM-VSTS-PesterRunner-Task.Pester-Task.Pester@8
   displayName: 'Pester Tests'

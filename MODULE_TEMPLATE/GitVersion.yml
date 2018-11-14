@@ -9,9 +9,9 @@ branches:
   master:
     tag: beta
     increment: Minor
-  features?[/-]:
+  feature:
     increment: Minor
-  releases?[/-]:
+  release:
     increment: None
 
 ignore:

@@ -20,13 +20,16 @@ function New-PSModule {
     [string]$ScmUsername,
     [string]$ScmBranch = 'master',
     [string]$ProjectUri = "https://www.github.com/$ScmUsername/$ModuleName",
-    [string]$IconUri = "https://www.github.com/$ScmUsername/$ModuleName/$ScmBranch/gallery-icon-100x100.png",
-    [string]$LicenseUri = "https://www.github.com/$ScmUsername/$ModuleName/$ScmBranch/LICENSE",
+    [string]$IconUri = "https://raw.githubusercontent.com/$ScmUsername/$ModuleName/$ScmBranch/gallery-icon-100x100.png",
+    [string]$LicenseUri = "https://raw.githubusercontent.com/$ScmUsername/$ModuleName/$ScmBranch/LICENSE",
     [ValidateSet('GitHub')]
     [string]$ScmType = 'GitHub',
     [parameter(Mandatory, HelpMessage='NugetApiKey for publishing to PowerShell gallery')]
     [string]$NugetApiKey,
-    [switch]$CreateRepository
+	[string]$AzureDevopsPersonalAccessToken,
+    [switch]$CreateRepository,
+	[switch]$PublishModule,
+	[switch]$CreateAzureDevopsPipeline
 
   )
   <#
@@ -105,9 +108,14 @@ function New-PSModule {
         Invoke-GitCommand 'remote -v' -RepoDir $Destination
         Invoke-GitCommand "push origin $ScmBranch" -RepoDir $Destination
     }
-
-   # Publish-Module -Path $Destination -Force -NuGetApiKey $NugetApiKey
-
+	
+	if($NugetApiKey -and $PublishModule) {
+		Publish-Module -Path $Destination -Force -NuGetApiKey $NugetApiKey
+	}
+	
     #Now setup Azure DevOps
+    if($CreateAzureDevopsPipeline -and $AzureDevopsPersonalAccessToken) {
+    
+    }
 
 }
