@@ -26,10 +26,11 @@ function New-PSModule {
     [string]$ScmType = 'GitHub',
     [parameter(Mandatory, HelpMessage='NugetApiKey for publishing to PowerShell gallery')]
     [string]$NugetApiKey,
-	[string]$AzureDevopsPersonalAccessToken,
+    [string]$AzureDevopsPersonalAccessToken,
     [switch]$CreateRepository,
-	[switch]$PublishModule,
-	[switch]$CreateAzureDevopsPipeline
+    [switch]$PublishModule,
+    [switch]$CreateAzureDevopsPipeline,
+    [string]$AzureDevopsOrg
 
   )
   <#
@@ -95,8 +96,8 @@ function New-PSModule {
                                                 Replace-RegExDynamicContent -Replacements $params.RegExDynamicReplacements @PSBoundParameters
                                             }
     if($ScmType -eq 'GitHub' -and $CreateRepository) {
-        Install-Module GitHelperUtil
-        Import-Module GitHelperUtil
+        Install-Module GitHelperUtil -force
+        Import-Module GitHelperUtil -force
         Install-GitCommandLine
 
         New-GitHubRepository -Name $ModuleName -Username $ScmUsername
@@ -109,13 +110,13 @@ function New-PSModule {
         Invoke-GitCommand "push origin $ScmBranch" -RepoDir $Destination
     }
 	
-	if($NugetApiKey -and $PublishModule) {
-		Publish-Module -Path $Destination -Force -NuGetApiKey $NugetApiKey
-	}
+    if($NugetApiKey -and $PublishModule) {
+      Publish-Module -Path $Destination -Force -NuGetApiKey $NugetApiKey
+    }
 	
     #Now setup Azure DevOps
     if($CreateAzureDevopsPipeline -and $AzureDevopsPersonalAccessToken) {
-    
+      New-AzureDevopsProject -PersonalAccessToken $AzureDevopsPersonalAccessToken -Organization $AzureDevopsOrg -ProjectName $moduleName -ProjectDescription $Description
     }
 
 }
