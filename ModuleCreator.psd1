@@ -7,7 +7,7 @@
 # Script module or binary module file associated with this manifest.
 RootModule = 'ModuleCreator.psm1'
 
-ModuleVersion = '1.0.6'
+ModuleVersion = '1.0.7'
 GUID = '3c653537-2db3-4a56-9904-ed958d25d02d'
 Author = 'Axian, Inc.'
 CompanyName = 'Axian, Inc.'
